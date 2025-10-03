@@ -4,6 +4,36 @@ from sqlalchemy.orm import relationship, sessionmaker
 import datetime
 import enum
 
+
+# models.py
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, ForeignKey, Enum
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, sessionmaker
+import datetime, enum, os
+
+# 讀取環境變數；沒有就退回 /tmp（臨時、非持久）
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:////tmp/campus_cleaning.db")
+
+connect_args = {"check_same_thread": False} if SQLALCHEMY_DATABASE_URL.startswith("sqlite") else {}
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args=connect_args)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+class UserRole(str, enum.Enum):
+    cleaner = "cleaner"
+    maintenance = "maintenance"
+    admin = "admin"
+    user = "user"
+
+class ReportStatus(str, enum.Enum):
+    pending = "pending"
+    in_progress = "in_progress"
+    completed = "completed"
+
+# （其餘 model 保持不變）
+
+
 SQLALCHEMY_DATABASE_URL = "sqlite:///./campus_cleaning.db"
 
 engine = create_engine(

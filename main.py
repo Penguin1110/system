@@ -15,7 +15,8 @@ from models import SessionLocal, engine, Base, User, Location, CleaningRecord, R
 # --- Setup ---
 
 # Ensure the 'uploads' directory for images exists
-os.makedirs("uploads", exist_ok=True)
+UPLOAD_DIR = os.getenv("UPLOAD_DIR", "/tmp/uploads")
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 # Create all database tables based on the models defined in models.py
 Base.metadata.create_all(bind=engine)
@@ -117,7 +118,7 @@ async def create_repair_report(
     image_url = None
     if image:
         # Save the uploaded image and store its path
-        file_location = f"uploads/{datetime.now().timestamp()}_{image.filename}"
+        file_location = os.path.join(UPLOAD_DIR, f"{datetime.now().timestamp()}_{image.filename}")
         with open(file_location, "wb+") as file_object:
             shutil.copyfileobj(image.file, file_object)
         image_url = file_location
