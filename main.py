@@ -83,7 +83,7 @@ def populate_initial_data():
 # Endpoint to serve uploaded images
 @app.get("/uploads/{filename}")
 async def get_image(filename: str):
-    return FileResponse(f"uploads/{filename}")
+    return FileResponse(os.path.join(UPLOAD_DIR, filename))
 
 # Endpoint to get all available locations
 @app.get("/locations", response_model=List[schemas.LocationBase])
