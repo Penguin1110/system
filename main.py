@@ -21,7 +21,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 # Create all database tables based on the models defined in models.py
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(root_path=os.getenv("ROOT_PATH", ""))
 
 # Allow frontend to communicate with this backend (CORS)
 app.add_middleware(
